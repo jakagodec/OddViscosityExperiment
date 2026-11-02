@@ -1,0 +1,29 @@
+[project]
+name = "odd-viscosity-experiment"
+version = "0.1.0"
+description = "Control GUI for the odd-viscosity sedimentation experiment: magnetic tweezers, capillary rotator and FLIR camera."
+readme = "README.md"
+authors = [
+    { name = "Jaka Godec", email = "jaka.godec@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pyqt6>=6.4",
+    "pyserial>=3.5",
+]
+
+[project.scripts]
+odd-viscosity-gui = "odd_viscosity_experiment.app:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["uv_build>=0.12.20,<0.13.0"]
+build-backend = "uv_build"

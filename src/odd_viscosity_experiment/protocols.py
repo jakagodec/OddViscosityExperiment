@@ -215,6 +215,11 @@ def run_cycles(ctx, p, prefix=None, start_focused=None):
         ctx.field_off()
 
 
+def run_control(ctx, p):
+    """Cycles with the field off throughout: flip, settle, flip back, record (no magnet needed)."""
+    run_cycles(ctx, replace(p, sequence='cntrl', bust=False))
+
+
 def run_scan(ctx, p):
     freqs, amps = parse_floats(p.scan_freqs), parse_floats(p.scan_amps)
     first = True
@@ -271,19 +276,20 @@ def run_flip(ctx, p):
         in_focus = not in_focus
 
 
-PROTOCOL_FUNCS = {'cycles': run_cycles, 'scan': run_scan, 'flow': run_flow, 'flip': run_flip}
+PROTOCOL_FUNCS = {'cycles': run_cycles, 'control': run_control, 'scan': run_scan, 'flow': run_flow,
+                  'flip': run_flip}
 
 
 def required_devices(p):
     """Which devices a protocol needs: subset of {'magnet', 'motor', 'camera'}."""
     needs = set()
-    if p.protocol in ('cycles', 'scan', 'flow'):
+    if p.protocol in ('cycles', 'control', 'scan', 'flow'):
         needs.add('camera')
-        if p.bust or p.protocol == 'scan' or any(FIELD_TOKENS[t][0] for t in parse_sequence(p.sequence)):
-            needs.add('magnet')
-    if p.protocol in ('cycles', 'scan', 'flip'):
+    if p.protocol in ('cycles', 'control', 'scan', 'flip'):
         needs.add('motor')
-    if p.protocol == 'flip' and p.bust:
+    if p.protocol == 'scan' or (p.protocol in ('cycles', 'flip') and p.bust):
+        needs.add('magnet')
+    if p.protocol in ('cycles', 'flow') and any(FIELD_TOKENS[t][0] for t in parse_sequence(p.sequence)):
         needs.add('magnet')
     return needs
 

@@ -135,6 +135,7 @@ class CameraSettings:
 
 PROTOCOLS = [
     ('cycles', 'Cycles (flip, settle, measure)'),
+    ('control', 'Control (flip, settle, measure; no magnet)'),
     ('scan', 'Frequency/amplitude scan'),
     ('flow', 'Flow (no motor)'),
     ('flip', 'Flip only (keep sample alive)'),
@@ -149,21 +150,21 @@ class RunParams:
                       protocols=['cycles', 'flow'])
     amp: float = opt(0.6, 'Amplitude', '>= ~0.8 tends to drive vortices in the capillary.', min=0, max=5,
                      decimals=3, step=0.05, protocols=['cycles', 'flow'])
-    cycles: int = opt(3, 'Cycles', min=1, max=100000, protocols=['cycles', 'scan', 'flow'])
+    cycles: int = opt(3, 'Cycles', min=1, max=100000, protocols=['cycles', 'control', 'scan', 'flow'])
     sequence: str = opt('cw,ccw,none', 'Field sequence',
                         'Repeated cyclically. Tokens: cw, ccw, none, none_x, none_y, cntrl (field off).',
                         protocols=['cycles', 'scan', 'flow'])
     measure_time: float = opt(50.0, 'Measure time', suffix=' s', min=0.1, max=100000,
-                              protocols=['cycles', 'scan', 'flow'])
+                              protocols=['cycles', 'control', 'scan', 'flow'])
     settle_time: float = opt(60.0, 'Settle time', 'Time after flipping for the beads to cross the channel.',
-                             suffix=' s', min=0, max=100000, protocols=['cycles', 'scan'])
-    prefix: str = opt('', 'File prefix', protocols=['cycles', 'scan', 'flow'])
+                             suffix=' s', min=0, max=100000, protocols=['cycles', 'control', 'scan'])
+    prefix: str = opt('', 'File prefix', protocols=['cycles', 'control', 'scan', 'flow'])
     start_focused: bool = opt(True, 'Start focused',
                               'Checked: beads lie on the bottom wall in the measuring orientation -> '
                               'flip, settle, flip back before the 1st cycle.\n'
                               'Unchecked: capillary is upside down with beads settled -> '
                               'one flip starts the 1st measurement.',
-                              protocols=['cycles', 'scan'])
+                              protocols=['cycles', 'control', 'scan'])
     bust: bool = opt(False, 'Bust aggregates', 'Before every cycle (flip protocol: while in focus).',
                      protocols=['cycles', 'scan', 'flip'])
     scan_freqs: str = opt('40,80,120', 'Scan frequencies', suffix=' Hz', protocols=['scan'])

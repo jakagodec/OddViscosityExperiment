@@ -88,9 +88,14 @@ variable `ODD_VISCOSITY_CONFIG_DIR`. Each day's log is written as
 | Protocol | What it does |
 |---|---|
 | **Cycles** | for each cycle: flip, let the beads settle (weak field), flip back, field on, record, field off |
+| **Control** | like *Cycles* with the field off (`<prefix>cycle=<n>_cntrl`); needs no magnet |
 | **Frequency/amplitude scan** | *Cycles* for every (frequency, amplitude), then an optional control run |
 | **Flow** | no motor: field cycles bracketed by field-off controls |
 | **Flip only** | flip every interval to keep beads from sticking to the walls (optional aggregate busting) |
+
+Only the devices a protocol uses must be connected: *Control* and *Flip only*
+(without busting) run without the magnet, *Flow* without the motor; *Cycles*
+and *Flow* need the magnet only if the sequence contains a field.
 
 **Field sequence** (repeated cyclically): `cw`, `ccw`, `none` (one turn CW, one
 CCW, starting vertical – the achiral control), `none_x` / `none_y` (alternating,
